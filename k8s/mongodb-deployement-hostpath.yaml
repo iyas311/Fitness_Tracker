@@ -34,7 +34,7 @@ spec:
             mountPath:  /data/db
       volumes:
         - name:  mongodb-nfs
-          persitantVolumeClaim:
+          persitentVolumeClaim:
             claimName:  mongo-pvc
             
 
