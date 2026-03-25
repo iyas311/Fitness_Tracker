@@ -30,13 +30,13 @@ spec:
             cpu:  "250m"
             memory:  "512Mi"
         volumeMounts:
-          - name: mongodb-iyas-hostpath
+          - name: mongodb-nfs
             mountPath:  /data/db
       volumes:
-        - name:  mongodb-iyas-hostpath
-          hostPath:
-            path:  /data
-            type:  DirectoryOrCreate
+        - name:  mongodb-nfs
+          persitantVolumeClaim:
+            claimName:  mongo-pvc
+            
 
 
 ---
