@@ -7,7 +7,7 @@ spec:
     storage:  3Gi
   accessModes:
     - ReadWriteMany
-  PersistantVolumeReclaimPolicy:  Retain
+  persistantVolumeReclaimPolicy:  Retain
   nfs:
     path: /var/nfs/general
     server: 13.127.183.82
