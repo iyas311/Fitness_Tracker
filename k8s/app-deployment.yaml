@@ -16,6 +16,33 @@ spec:
           [{"source":"nodejs","service":"fitness-tracker-service"},
            {"source":"nodejs","service":"fitness-tracker-app"}]
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions: #OR'ed
+                  - key: env  #AND'ed
+                    operator: In 
+                    values:
+                     - dev
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: tag
+                    operator: In
+                    values:
+                      - study
+                      - test
+            - weight: 90
+              preference:
+                matchExpressions:
+                  - key: tag
+                    operator:  In
+                    values:
+                      - qa
+                  
+                  
       containers:
         - name: fitness-tracker-app
           image: pulkit197/fitness_tracker-master-copy3-fitness-app:latest
