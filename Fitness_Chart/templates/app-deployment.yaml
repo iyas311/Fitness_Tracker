@@ -57,7 +57,7 @@ spec:
     spec:
       containers:
         - name: fitness-tracker-app
-          image: iyask/ai-service:v1.1.1
+          image: team3kubectl/ai-service:latest
           ports:
             - containerPort: 5000
 
