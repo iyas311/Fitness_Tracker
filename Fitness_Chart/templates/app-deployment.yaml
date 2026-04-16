@@ -1,12 +1,50 @@
-apiVersion: apps/v1
-kind: Deployment
+# =========================
+# 🟢 ACTIVE SERVICE (LIVE)
+# =========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitness-tracker-active
+spec:
+  selector:
+    app: fitness-tracker-app
+  ports:
+    - port: 80
+      targetPort: 5000
+
+---
+# =========================
+# 🔵 PREVIEW SERVICE (TEST)
+# =========================
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitness-tracker-preview
+spec:
+  selector:
+    app: fitness-tracker-app
+  ports:
+    - port: 80
+      targetPort: 5000
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: fitness-tracker-app
 spec:
   replicas: 2
+
+  strategy:
+    blueGreen:
+      activeService: fitness-tracker-active
+      previewService: fitness-tracker-preview
+      autoPromotionEnabled: false  
+
   selector:
     matchLabels:
       app: fitness-tracker-app
+
   template:
     metadata:
       labels:
@@ -15,12 +53,14 @@ spec:
         ad.datadoghq.com/fitness-tracker-app.logs: >-
           [{"source":"nodejs","service":"fitness-tracker-service"},
            {"source":"nodejs","service":"fitness-tracker-app"}]
+
     spec:
       containers:
         - name: fitness-tracker-app
           image: iyask/ai-service:v1.1.1
           ports:
             - containerPort: 5000
+
           env:
             - name: MONGODB_URI
               value: "mongodb://mongodb-service:27017/fitness-tracker"
@@ -30,7 +70,8 @@ spec:
               value: "0.0.0.0"
             - name: NODE_ENV
               value: "production"
-            # Datadog APM (tracing) env variables
+
+            # Datadog APM
             - name: DD_AGENT_HOST
               valueFrom:
                 fieldRef:
@@ -43,16 +84,3 @@ spec:
               value: "fitness-tracker-app"
             - name: DD_VERSION
               value: "1.0.0"
---- 
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: fitness-tracker-service
-spec:
-  selector:
-    app: fitness-tracker-app
-  ports:
-  - port: 80
-    targetPort: 5000
-  type: LoadBalancer
