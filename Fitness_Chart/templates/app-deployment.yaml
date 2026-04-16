@@ -18,11 +18,9 @@ spec:
     spec:
       containers:
         - name: fitness-tracker-app
-          image: pulkit197/fitness_tracker-master-copy3-fitness-app:latest
+          image: iyask/ai-service
           ports:
             - containerPort: 5000
-          # ✔ All configMap vars removed
-          # ✔ Direct env variables added
           env:
             - name: MONGODB_URI
               value: "mongodb://mongodb-service:27017/fitness-tracker"
