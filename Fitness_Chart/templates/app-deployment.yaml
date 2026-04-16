@@ -57,7 +57,7 @@ spec:
     spec:
       containers:
         - name: fitness-tracker-app
-          image: team3kubectl/ai-service:latest
+          image: nginx:1.26
           ports:
             - containerPort: 5000
 
